@@ -1,0 +1,16 @@
+[Unit]
+Description=Play Framework Example Application %i
+After=docker.service
+Requires=docker.service
+Requires=play-announce@%i.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill playexample
+ExecStartPre=-/usr/bin/docker rm playexample
+ExecStartPre=/usr/bin/docker pull msiegenthaler/angular-example:2.3.3-SNAPSHOT
+ExecStart=/usr/bin/docker run --rm --name playexample -p 9000:9000 msiegenthaler/angular-example:2.3.3-SNAPSHOT
+ExecStop=/usr/bin/docker stop playexample
+
+[X-Fleet]
+X-Conflicts=play-example@*.service

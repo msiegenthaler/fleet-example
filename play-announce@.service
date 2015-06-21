@@ -1,0 +1,12 @@
+[Unit]
+Description=Announce Play-Example@%i
+BindsTo=play-example@%i.service
+After=play-example@%i.service
+
+[Service]
+EnvironmentFile=/etc/environment
+ExecStart=/bin/sh -c "while true; do etcdctl set /backend/server/%m ${COREOS_PUBLIC_IPV4}:9000 --ttl 60;sleep 45;done"
+ExecStop=/usr/bin/etcdctl rm /backend/server/%m
+
+[X-Fleet]
+X-ConditionMachineOf=play-example@%i.service
